@@ -35,12 +35,31 @@ describe("Days View Component", () => {
     const [tbody] = element.getElementsByTagName("tbody");
     const days = tbody.getElementsByTagName("td");
     expect(days[0].textContent).toBe("27");
+    expect(days[5].textContent).toBe("1");
   });
   it("should highlight today", () => {
-    render(<BSDays dataTestId="days"  />);
-    const today = new Date()
+    render(<BSDays dataTestId="days" selectedDate="2022-01-01" />);
+    const today = new Date();
     const todayCell = screen.getByTitle(today.toDateString());
-    expect(todayCell.classList.contains("active"));
-
+    expect(todayCell.classList.contains("bg-light")).toBeTruthy();
+  });
+  it("should hightlight selectedDate", () => {
+    render(
+      <BSDays
+        dataTestId="days"
+        month="0"
+        selectedDate="2022-01-01"
+        year="2022"
+      />,
+    );
+    const element = screen.getByTestId("days");
+    const [tbody] = element.getElementsByTagName("tbody");
+    const days = tbody.getElementsByTagName("td");
+    expect(days[6].classList.contains("bg-primary")).toBeTruthy();
+  });
+  it("should hightlight date by click", () => {
+    render(<BSDays dataTestId="days" year="2022" month="0" selectedDate="2022-1-1" />);
+    const element = screen.getByTestId("days");
+    const [tbody] = element.getElementsByTagName("tbody");
   });
 });

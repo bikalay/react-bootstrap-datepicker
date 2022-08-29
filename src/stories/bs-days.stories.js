@@ -6,8 +6,13 @@ export default {
   component: BSDays,
 };
 
-const Template = () => {
+const TemplateDefault = () => {
   return <BSDays />;
 };
 
-export const Default = Template.bind({});
+const TemplateWithSelectedDate = () => {
+  return <BSDays month="0" year="2022" selectedDate="2022-1-1" />
+}
+
+export const Default = TemplateDefault.bind({});
+export const SelectedDate = TemplateWithSelectedDate.bind({});

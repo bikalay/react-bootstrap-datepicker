@@ -1,12 +1,21 @@
-const {addDays, subtractDays, getFirstDay, getMonthCalendarDays} = require("../date.utils");
+const {
+  addDays,
+  subtractDays,
+  getMonthCalendarDays,
+  parseDate,
+  sameDay,
+} = require("../date.utils");
 
 describe("Date utils", () => {
-  it('should return correct days array for Jan 1970', () => {
-    const daysArray = getMonthCalendarDays(0, 1970)
-    expect(daysArray[0].getDate()).toBe(28);
-    expect(daysArray[4].getDate()).toBe(1);
-    expect(daysArray).toHaveLength(42);
+  describe("getMonthCalendarDays", () => {
+    it("should return correct days array for Jan 1970", () => {
+      const daysArray = getMonthCalendarDays(0, 1970);
+      expect(daysArray[0].getDate()).toBe(28);
+      expect(daysArray[4].getDate()).toBe(1);
+      expect(daysArray).toHaveLength(42);
+    });
   });
+
   describe("dateAdd", () => {
     it("should get next date", () => {
       const date = new Date(1970, 11, 20);
@@ -20,6 +29,7 @@ describe("Date utils", () => {
       expect(resultDate2.getFullYear()).toBe(1971);
     });
   });
+
   describe("subtractDays", () => {
     it("should get previous date", () => {
       const date = new Date(1970, 0, 10);
@@ -34,17 +44,36 @@ describe("Date utils", () => {
     });
   });
 
-  describe("getFirstDay", () => {
-    it("should return first day of month", () => {
-      const firstDay = getFirstDay(0, 1970);
-      expect(firstDay.getDate()).toBe(1);
-      expect(firstDay.getMonth()).toBe(0);
-      expect(firstDay.getFullYear()).toBe(1970);
+  describe("parseDate", () => {
+    it("should throw error if invalid date passed", () => {
+      expect(() => {
+        parseDate(new Date("Invalid date"));
+      }).toThrowError("Invalid date");
+    });
+    it("should throw error if passed value than can't be a date", () => {
+      expect(() => {
+        parseDate("bad date string");
+      }).toThrowError("Invalid date");
+    });
+    it("should return same date if passed correct date object", () => {
+      const date = new Date();
+      expect(parseDate(date) === date).toBeTruthy();
+    });
+    it("shoud return correct date object for correct input number", () => {
+      const date1 = parseDate(0);
+      expect(date1.getFullYear()).toBe(1970);
+      const date2 = parseDate(new Date().getTime());
+      expect(date2.getFullYear()).toBe(new Date().getFullYear());
     });
   });
 
-
-  describe("addMonth", () => {
-    it("it should get same day of next month", () => {});
+  describe("sameDay", () => {
+    it("should return true for same days", () => {
+      expect(sameDay(new Date("1970-1-1"), new Date(1970, 0, 1))).toBeTruthy();
+      expect(sameDay('1970-1-1', new Date(0).getTime()));
+    });
+    it("should return false for different days", () => {
+      expect(sameDay(new Date(), new Date(0))).toBeFalsy();
+    })
   });
 });

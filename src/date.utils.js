@@ -7,14 +7,14 @@ const day = hour * 24;
 const weeksInMonth = 6;
 
 /**
- * getMountDays.
+ * getMonthCalendarDays
  *
  * @param {number} month
  * @param {number} year
  * @returns {Array<Date>}
  */
 export const getMonthCalendarDays = (month, year) => {
-  const firstDayOfMonth = getFirstDay(month, year);
+  const firstDayOfMonth = new Date(year, month, 1);
   const result = [];
   let date = subtractDays(firstDayOfMonth, firstDayOfMonth.getDay());
   for (let i  = 0; i < weekDays * weeksInMonth; i++) {
@@ -23,20 +23,6 @@ export const getMonthCalendarDays = (month, year) => {
   }
   return result;
 };
-
-
-
-/**
- * getFirstDay.
- *
- * @param {number} month
- * @param {number} year
- * @returns {Date}
- */
-export const getFirstDay = (month, year) => {
-  return new Date(year, month, 1);
-}
-
 
 /**
  * addDays.
@@ -47,7 +33,7 @@ export const getFirstDay = (month, year) => {
  */
 export const addDays = (date, number) => {
   const timestamp = new Date(date).getTime();
-  return new Date(timestamp + (day * number));
+  return parseDate(timestamp + (day * number));
 };
 
 
@@ -60,6 +46,39 @@ export const addDays = (date, number) => {
  */
 export const subtractDays = (date, number) => {
   const timestamp = new Date(date).getTime();
-  return new Date(timestamp - (day * number))
+  return parseDate(timestamp - (day * number))
 }
+
+/**
+ * isDate.
+ *
+ * @param {*} value
+ * return {Date}
+ */
+export const parseDate = (value) => {
+  if(Object.prototype.toString.call(value) === "[object Date]") {
+    if(isNaN(value.getTime())) {
+      throw new Error("Invalid date");
+    }
+    return value;
+  }
+  const date = new Date(value);
+  if(isNaN(date.getTime())) {
+    throw new Error("Invalid date");
+  }
+  return date;
+}
+
+/**
+ * sameDay.
+ *
+ * @param {number | string | Date} date1
+ * @param {number | string | Date} date2
+ */
+export const sameDay = (date1, date2) => {
+  const _date1 = parseDate(date1);
+  const _date2 = parseDate(date2);
+  return _date1.toDateString() === _date2.toDateString();
+}
+
 

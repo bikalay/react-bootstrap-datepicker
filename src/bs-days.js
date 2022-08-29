@@ -1,11 +1,12 @@
 import React from "react";
-import {getMonthCalendarDays} from "./date.utils";
+import {getMonthCalendarDays, parseDate, sameDay} from "./date.utils";
 
 /**
  *  @typedef {Object} BSDaysProps
  *  @property {string=} dataTestId
  *  @property {number | string=} month
  *  @property {number | string=} year
+ *  @property {string | number | Date=} selectedDate
  */
 
 /**
@@ -15,15 +16,18 @@ import {getMonthCalendarDays} from "./date.utils";
  */
 const BSDays = (props) => {
   const today = new Date();
-  let {
+  const {
     dataTestId,
+    selectedDate,
     month = today.getMonth(),
     year = today.getFullYear(),
   } = props;
-  month = typeof month === "string" ? parseInt(month, 10) : month;
-  year = typeof year === "string" ? parseInt(year, 10) : year;
+  const _selecredDate = selectedDate ? parseDate(selectedDate) : new Date();
+  const _month = typeof month === "string" ? parseInt(month, 10) : month;
+  const _year = typeof year === "string" ? parseInt(year, 10) : year;
 
-  const days = getMonthCalendarDays(month, year);
+  const days = getMonthCalendarDays(_month, _year);
+
   /**
    * getDayClassName.
    *
@@ -32,8 +36,11 @@ const BSDays = (props) => {
    */
   const getDayClassName = (date) => {
     const today = new Date();
-    if(today.toDateString() === date.toDateString()) {
-      return "bg-light"
+    if (sameDay(_selecredDate, date)) {
+      return "bg-primary";
+    }
+    if (sameDay(today, date)) {
+      return "bg-light";
     }
     return "";
   };
